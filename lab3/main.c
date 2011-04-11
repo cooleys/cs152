@@ -68,7 +68,7 @@ void initialize (void) {
 	/** Port C is for the 'row' of the LED array. They should always be outputs. ( 0 = Input and 1 = Output )*/
 	DDRC=0b11111111;
 
-	/** Port D has the Serial on it. Leave DDRD alone. ( 0 = Input and 1 = Output )*/
+	/** Port D has the Serial on it. Leave DDRB alone. ( 0 = Input and 1 = Output )*/
 	DDRD=0b00000000;
 
 	/** Port E has the LED Array Column control out on it. Leave DDRE alone. ( 0 = Input and 1 = Output )*/
@@ -86,55 +86,50 @@ void clearArray(void)
 	PORTB &= ~((1 << PB6) | (1 << PB7));	/** Disable latches*/
 }
 
-/** This function needs to setup the variables used by the UART to enable the UART and tramsmit at 9600bps*/
-unsigned char InitalizeUART (){
+/** This function needs to setup the variables used by TIMER0 Compare Match (CTC) mode with 
+a base clock frequency of clk/64. This function should return a 1 if it fails and a 0 if it 
+does not. Remember, by default the Wunderboard runs at 1mHz for its system clock.
 
-	/* Set baud rate */
-	UBRR1H = 0;
-	UBRR1L = 12;
-	/* Set U2X1 */
-	UCSR1A = (1 << U2X1);
-	/* Enable transmitter */
-	UCSR1B |= (1 << TXEN1) | (1 << RXEN1);
-	/* Set frame format: 8data, 1stop bit */
-	UCSR1C |= (1 << UCSZ10) | (1 << UCSZ11);
-	UCSR1C &= ~(1 << USBS1);
+@return This function returns a 1 is unsuccessful, else return 0.*/
+unsigned char InitializeTIMER0 (){
 
-	return 0;
+	/* Set the CTC mode */
+	TCCR0A = ;
+	/* Set the Clock Frequency */
+	TCCR0B = ;
+	/* Set initial count value */
+	OCR0A = ;
 }
 
-/** This function writes a single byte to the UART. */
-unsigned char SendByteUART (unsigned char data){
-	while(!(UCSR1A & (1<<UDRIE1)));
-	UDR1 = data;
-	while(!(UCSR1A & (1<<UDRIE1)));
-	return 0;
+/** This function checks if TIMER0 has elapsed. 
+@return This function should return a 1 if the timer has elapsed, else return 0*/
+
+unsigned char checkTIMER0 (){
+
+
 }
 
-/** This function reads a single byte to the UART. */
-unsigned char RecieveByteUART (unsigned char data){
-	while(!(UCSR1A & (1<<UDRIE1)));
-	return UDR1;
-}
+/** This function takes two values, clock and count. The value of count should be copied into OCR0A and the value of clock should be used to set CS02:0. The TCNT0 variable should also be reset to 0 so that the new timer rate starts from 0.  
+@param [in] clock Insert Comment
+@param [in] count Insert Comment
+@return The function returns a 1 or error and 0 on successful completion.*/
+
+unsigned char setTIMER0 (unsigned char clock, unsigned char count){
 
 
-/** This function needs to writes a string to the UART. It must check that the UART is ready for a new byte and return a 1 if the string was not sent. */
-unsigned char SendStringUART (unsigned char *data){
-	
-	return 0;
 }
 
 /** Main Function */
 
 int main (void) {
 	/** Local Varibles */
-	int c = 0;
-
+	
 	initialize();
-	InitalizeUART();
-
+		
 	while(1){
-		SendByteUART('a');
-		_delay_ms(500);
+
+
+
 	}
+
 }//main
